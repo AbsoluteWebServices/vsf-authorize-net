@@ -1,13 +1,17 @@
 import { integrationPlugin } from '@vue-storefront/core'
-import { mapConfigToSetupObject } from '@absolute-web/vsf-authorize-net/nuxt/helpers';
 
 const moduleOptions = JSON.parse('<%= JSON.stringify(options) %>');
 
+const defaultConfig = {
+  loginId: '',
+  clientKey: ''
+};
+
 export default integrationPlugin(({ app, integration }) => {
-  const settings = mapConfigToSetupObject({
-    moduleOptions,
-    app
-  });
+  const settings = {
+    ...defaultConfig,
+    ...moduleOptions,
+  };
 
   integration.configure('authnet', settings);
 });

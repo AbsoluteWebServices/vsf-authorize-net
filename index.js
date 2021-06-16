@@ -1,5 +1,4 @@
 import path from 'path';
-import proxyMiddleware from './proxyMiddleware';
 
 export default function (moduleOptions) {
   this.extendBuild((config) => {
@@ -9,11 +8,6 @@ export default function (moduleOptions) {
 
   this.addPlugin({
     src: path.resolve(__dirname, './plugin.js'),
-    moduleOptions,
-  });
-
-  this.addServerMiddleware({
-    path: '/authnet/iframe-communicator',
-    handler: proxyMiddleware()
+    options: moduleOptions,
   });
 }
