@@ -39,6 +39,7 @@
 import { ref, computed, defineComponent, onMounted, onUnmounted, nextTick } from '@vue/composition-api';
 import { useVSFContext } from '@vue-storefront/core';
 
+const ENV_PROD = 'production';
 const sessionKey = 'authnet-acceptui-response';
 const nonceValidTimeout = 14.5 * 60000; // 14.5 minutes
 let acceptUiScriptLoaded = false;
@@ -53,10 +54,6 @@ export default defineComponent({
     settings: {
       type: Object,
       default: null,
-    },
-    test: {
-      type: Boolean,
-      default: false
     }
   },
   head () {
@@ -65,16 +62,22 @@ export default defineComponent({
 
     return {
       script: [
-        { once: true, skip, src: `https://js${this.test ? 'test' : ''}.authorize.net/v3/AcceptUI.js` }
+        {
+          vmid: 'authorize-net',
+          once: true,
+          skip,
+          src: `https://js${this.isTest ? 'test' : ''}.authorize.net/v3/AcceptUI.js`
+        }
       ]
     }
   },
   setup(props, { emit }) {
     const { $authnet } = useVSFContext();
 
-    const acceptUiParams = computed(() => {
-      const { loginId, clientKey } = $authnet.config;
+    const { loginId, clientKey, environment } = $authnet.config;
+    const isTest = computed(() => environment !== ENV_PROD);
 
+    const acceptUiParams = computed(() => {
       const settings = {
         apiloginid: loginId,
         clientkey: clientKey,
@@ -103,7 +106,7 @@ export default defineComponent({
     const cardNumber = computed(() => savedResponse.value?.encryptedCardData?.cardNumber);
     const iframeUrl = computed(() => {
       const hash = encodeURIComponent(JSON.stringify({ verifyOrigin: 'AcceptUI', type: 'SYNC', pktData: window.location.origin }))
-      const base = `https://js${props.test ? 'test' : ''}.authorize.net/v3/acceptMain/acceptMain.html`
+      const base = `https://js${isTest.value ? 'test' : ''}.authorize.net/v3/acceptMain/acceptMain.html`
 
       return `${base}#${hash}`
     });
@@ -237,6 +240,7 @@ export default defineComponent({
     });
 
     return {
+      isTest,
       acceptUiParams,
       errors,
       confirmed,

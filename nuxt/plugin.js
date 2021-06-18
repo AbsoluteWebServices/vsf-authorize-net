@@ -4,7 +4,8 @@ const moduleOptions = JSON.parse('<%= JSON.stringify(options) %>');
 
 const defaultConfig = {
   loginId: '',
-  clientKey: ''
+  clientKey: '',
+  environment: 'development'
 };
 
 export default integrationPlugin(({ app, integration }) => {
