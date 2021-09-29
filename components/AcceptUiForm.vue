@@ -31,12 +31,19 @@
         <p v-for="error in errors" :key="error.code">{{ error.text }}</p>
       </div>
     </slot>
-    <button  v-bind="acceptUiParams" type="button" class="AcceptUI"></button>
+    <button v-bind="acceptUiParams" type="button" class="AcceptUI"></button>
   </div>
 </template>
 
 <script>
-import { ref, computed, defineComponent, onMounted, onUnmounted, nextTick } from '@vue/composition-api';
+import {
+  ref,
+  computed,
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  nextTick,
+} from '@vue/composition-api';
 import { useVSFContext } from '@vue-storefront/core';
 
 const ENV_PROD = 'production';
@@ -47,18 +54,18 @@ let acceptUiScriptLoaded = false;
 export default defineComponent({
   name: 'AcceptUiForm',
   props: {
-    cartId: {
-      type: String,
-      default: '',
-    },
     settings: {
       type: Object,
       default: null,
-    }
+    },
+    saveInStorage: {
+      type: Boolean,
+      default: true,
+    },
   },
-  head () {
-    const skip = acceptUiScriptLoaded
-    acceptUiScriptLoaded = true
+  head() {
+    const skip = acceptUiScriptLoaded;
+    acceptUiScriptLoaded = true;
 
     return {
       script: [
@@ -66,10 +73,12 @@ export default defineComponent({
           vmid: 'authorize-net',
           once: true,
           skip,
-          src: `https://js${this.isTest ? 'test' : ''}.authorize.net/v3/AcceptUI.js`
-        }
-      ]
-    }
+          src: `https://js${
+            this.isTest ? 'test' : ''
+          }.authorize.net/v3/AcceptUI.js`,
+        },
+      ],
+    };
   },
   setup(props, { emit }) {
     const { $authnet } = useVSFContext();
@@ -84,12 +93,15 @@ export default defineComponent({
         acceptUIFormBtnTxt: 'Confirm Card Information',
         acceptUIFormHeaderTxt: '',
         responseHandler: 'CommunicationHandler',
-        paymentOptions: JSON.stringify({ showCreditCard: true, showBankAccount: false }),
+        paymentOptions: JSON.stringify({
+          showCreditCard: true,
+          showBankAccount: false,
+        }),
         billingAddressOptions: JSON.stringify({ show: false, required: false }),
         ...props.settings,
-      }
+      };
 
-      const data = {}
+      const data = {};
 
       for (const key in settings) {
         if (Object.hasOwnProperty.call(settings, key)) {
@@ -103,12 +115,22 @@ export default defineComponent({
     const confirmed = ref(false);
     const savedResponse = ref(null);
     const timer = ref(null);
-    const cardNumber = computed(() => savedResponse.value?.encryptedCardData?.cardNumber);
+    const cardNumber = computed(
+      () => savedResponse.value?.encryptedCardData?.cardNumber
+    );
     const iframeUrl = computed(() => {
-      const hash = encodeURIComponent(JSON.stringify({ verifyOrigin: 'AcceptUI', type: 'SYNC', pktData: window.location.origin }))
-      const base = `https://js${isTest.value ? 'test' : ''}.authorize.net/v3/acceptMain/acceptMain.html`
+      const hash = encodeURIComponent(
+        JSON.stringify({
+          verifyOrigin: 'AcceptUI',
+          type: 'SYNC',
+          pktData: window.location.origin,
+        })
+      );
+      const base = `https://js${
+        isTest.value ? 'test' : ''
+      }.authorize.net/v3/acceptMain/acceptMain.html`;
 
-      return `${base}#${hash}`
+      return `${base}#${hash}`;
     });
 
     const clearSavedResponse = (expired = true) => {
@@ -133,7 +155,10 @@ export default defineComponent({
         clearTimeout(timer.value);
       }
 
-      timer.value = setTimeout(clearSavedResponse, timeout > 0 ? timeout : nonceValidTimeout);
+      timer.value = setTimeout(
+        clearSavedResponse,
+        timeout > 0 ? timeout : nonceValidTimeout
+      );
     };
 
     const loadResponseFromSession = () => {
@@ -146,7 +171,13 @@ export default defineComponent({
 
         const { response, time, cartId } = JSON.parse(item);
 
-        if (!response || !time || !cartId || (Date.now() - time) > nonceValidTimeout || cartId !== props.cartId) {
+        if (
+          !response ||
+          !time ||
+          !cartId ||
+          Date.now() - time > nonceValidTimeout ||
+          cartId !== $authnet.config.state.getCartId()
+        ) {
           return clearSavedResponse(false);
         }
 
@@ -168,11 +199,14 @@ export default defineComponent({
           return;
         }
 
-        sessionStorage.setItem(sessionKey, JSON.stringify({
-          response: savedResponse.value,
-          time: Date.now(),
-          cartId: props.cartId,
-        }));
+        sessionStorage.setItem(
+          sessionKey,
+          JSON.stringify({
+            response: savedResponse.value,
+            time: Date.now(),
+            cartId: $authnet.config.state.getCartId(),
+          })
+        );
 
         setupTimer();
       } catch (err) {
@@ -191,7 +225,9 @@ export default defineComponent({
     };
 
     onMounted(async () => {
-      loadResponseFromSession();
+      if (props.saveInStorage) {
+        loadResponseFromSession();
+      }
 
       const scrollPosition = { x: window.scrollX, y: window.scrollY };
 
@@ -200,7 +236,7 @@ export default defineComponent({
         e.preventDefault();
         e.stopPropagation();
         window.removeEventListener('scroll', resetScroll);
-      }
+      };
 
       window.addEventListener('scroll', resetScroll);
 
@@ -218,10 +254,11 @@ export default defineComponent({
           return false;
         }
 
-        confirmed.value = true;
-        savedResponse.value = response;
-
-        saveResponseToSession();
+        if (props.saveInStorage) {
+          confirmed.value = true;
+          savedResponse.value = response;
+          saveResponseToSession();
+        }
 
         emit('success', response);
         return true;
@@ -235,7 +272,7 @@ export default defineComponent({
 
       const AcceptUIBackground = document.getElementById('AcceptUIBackground');
       if (AcceptUIBackground) {
-        AcceptUIBackground.remove()
+        AcceptUIBackground.remove();
       }
     });
 
@@ -249,28 +286,28 @@ export default defineComponent({
       iframeUrl,
       editPayment,
       cancelEditing,
-    }
+    };
   },
 });
 </script>
 
 <style>
 #AcceptUIContainer {
-  opacity: 1!important;
-  visibility: visible!important;
-  position: relative!important;
-  top: 0!important;
-  margin: 0!important;
-  left: 0!important;
-  box-shadow: none!important;
-  width: 100%!important;
-  z-index: 10!important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative !important;
+  top: 0 !important;
+  margin: 0 !important;
+  left: 0 !important;
+  box-shadow: none !important;
+  width: 100% !important;
+  z-index: 10 !important;
 }
 #AcceptUIContainer iframe {
-  width: 100%!important;
+  width: 100% !important;
 }
 #AcceptUIBackground {
-  display: none!important;
+  display: none !important;
 }
 .acceptui-container {
   position: relative;
