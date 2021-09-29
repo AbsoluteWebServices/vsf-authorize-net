@@ -7,6 +7,7 @@ export const defaultSettings: ClientConfig = {
     customerCookieName: 'vsf-customer',
   },
   state: {
+    getCartId: () => '',
     getCustomerToken: () => '',
   },
 };
