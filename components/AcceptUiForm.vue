@@ -290,38 +290,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style>
-#AcceptUIContainer {
-  opacity: 1 !important;
-  visibility: visible !important;
-  position: relative !important;
-  top: 0 !important;
-  margin: 0 !important;
-  left: 0 !important;
-  box-shadow: none !important;
-  width: 100% !important;
-  z-index: 10 !important;
-}
-#AcceptUIContainer iframe {
-  width: 100% !important;
-}
-#AcceptUIBackground {
-  display: none !important;
-}
-.acceptui-container {
-  position: relative;
-}
-.acceptui-container .close-icon-hider {
-  position: absolute;
-  z-index: 20;
-  top: 0;
-  right: 0;
-  width: 40px;
-  height: 40px;
-  background-color: #fff;
-}
-.AcceptUI {
-  display: none;
-}
-</style>
