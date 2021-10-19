@@ -1,4 +1,4 @@
-import { ApolloQueryResult } from 'apollo-client';
+import { ApolloQueryResult } from '@apollo/client';
 import tokenBaseCards from './tokenBaseCards';
 import { Context, TokenBaseCard } from '../../types';
 

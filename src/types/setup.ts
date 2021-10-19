@@ -1,4 +1,4 @@
-import ApolloClient, { ApolloClientOptions } from 'apollo-client';
+import { ApolloClient, ApolloClientOptions } from '@apollo/client';
 
 export interface ClientInstance<T = any> extends ApolloClient<T> {
 }
