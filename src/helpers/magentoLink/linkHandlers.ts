@@ -1,6 +1,6 @@
 import { Logger } from '@vue-storefront/core';
-import { Operation } from 'apollo-link';
-import { setContext } from 'apollo-link-context';
+import { Operation } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import { ConfigState } from '../../types/setup';
 
 export const handleRetry = () => (count: number, operation: Operation, error: any) => {
