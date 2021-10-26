@@ -1,4 +1,4 @@
-import { Context } from '@vue-storefront/core';
+import { Context } from '@absolute-web/vsf-core';
 import { TokenBaseCard, TokenBaseCheckoutConfig } from '../types';
 import { useTokenBaseCardFactory, UseTokenBaseCardFactoryParams } from '../factories/useTokenBaseCardFactory';
 

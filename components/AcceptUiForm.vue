@@ -44,7 +44,7 @@ import {
   onUnmounted,
   nextTick,
 } from '@vue/composition-api';
-import { useVSFContext } from '@vue-storefront/core';
+import { useVSFContext } from '@absolute-web/vsf-core';
 
 const ENV_PROD = 'production';
 const sessionKey = 'authnet-acceptui-response';

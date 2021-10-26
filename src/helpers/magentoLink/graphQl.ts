@@ -3,7 +3,7 @@ import { URL } from 'url';
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, from } from '@apollo/client';
 import fetch from 'isomorphic-fetch';
 import { stripIgnoredCharacters } from 'graphql';
-import { Logger } from '@vue-storefront/core';
+import { Logger } from '@absolute-web/vsf-core';
 import { onError } from '@apollo/client/link/error';
 import { RetryLink } from '@apollo/client/link/retry';
 import { setContext } from '@apollo/client/link/context';

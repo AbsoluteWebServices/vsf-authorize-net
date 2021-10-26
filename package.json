@@ -5,7 +5,7 @@
   "homepage": "https://github.com/AbsoluteWebServices/vsf-authorize-net",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AbsoluteWebServices/vsf-authorize-net.git"
+    "url": "https://github.com/AbsoluteWebServices/vsf-authorize-net.git"
   },
   "bugs": {
     "url": "https://github.com/AbsoluteWebServices/vsf-authorize-net/issues"
@@ -26,9 +26,9 @@
   },
   "dependencies": {
     "@apollo/client": "^3.4.16",
-    "@vue-storefront/core": "~2.4.2",
-    "@vue-storefront/magento": "1.0.0-rc.4",
-    "@vue-storefront/magento-api": "1.0.0-rc.4",
+    "@absolute-web/vsf-core": "^0.0.1",
+    "@absolute-web/magento": "^0.0.1",
+    "@absolute-web/magento-api": "^0.0.1",
     "isomorphic-fetch": "^3.0.0",
     "vue-demi": "latest"
   },
@@ -47,7 +47,8 @@
   "files": [
     "lib/**/*",
     "nuxt/**/*",
-    "server/**/*"
+    "server/**/*",
+    "components/**/*"
   ],
   "publishConfig": {
     "access": "public"
