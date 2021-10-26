@@ -1,4 +1,4 @@
-import { CustomerAddress, CustomerAddressInput } from '@vue-storefront/magento-api';
+import { CustomerAddress, CustomerAddressInput } from '@absolute-web/magento-api';
 
 type CCData = {
   cc_type: string;
