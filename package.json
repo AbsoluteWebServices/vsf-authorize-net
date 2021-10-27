@@ -10,7 +10,7 @@
   "bugs": {
     "url": "https://github.com/AbsoluteWebServices/vsf-authorize-net/issues"
   },
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "UNLICENSED",
   "sideEffects": false,
   "main": "lib/index.cjs.js",
@@ -26,11 +26,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.4.16",
-    "@absolute-web/vsf-core": "^0.0.1",
-    "@absolute-web/magento": "^0.0.1",
-    "@absolute-web/magento-api": "^0.0.1",
-    "isomorphic-fetch": "^3.0.0",
-    "vue-demi": "latest"
+    "isomorphic-fetch": "^3.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-graphql": "^1.0.0",
@@ -41,8 +37,11 @@
     "typescript": "^4.3.3"
   },
   "peerDependencies": {
-    "@vue/composition-api": "1.0.0-beta.21",
-    "vue": "^2.0.0 || >=3.0.0-rc.0"
+    "@absolute-web/vsf-core": "~0.0.1",
+    "@absolute-web/magento": "~0.0.1",
+    "@absolute-web/magento-api": "~0.0.1",
+    "vue": "^2.0.0 || >=3.0.0-rc.0",
+    "vue-demi": "latest"
   },
   "files": [
     "lib/**/*",

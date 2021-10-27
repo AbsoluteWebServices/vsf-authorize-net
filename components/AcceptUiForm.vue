@@ -43,7 +43,7 @@ import {
   onMounted,
   onUnmounted,
   nextTick,
-} from '@vue/composition-api';
+} from 'vue-demi';
 import { useVSFContext } from '@absolute-web/vsf-core';
 
 const ENV_PROD = 'production';
