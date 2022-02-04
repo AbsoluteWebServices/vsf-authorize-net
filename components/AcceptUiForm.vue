@@ -54,6 +54,10 @@ let acceptUiScriptLoaded = false;
 export default defineComponent({
   name: 'AcceptUiForm',
   props: {
+    cartId: {
+      type: String,
+      required: true,
+    },
     settings: {
       type: Object,
       default: null,
@@ -176,7 +180,7 @@ export default defineComponent({
           !time ||
           !cartId ||
           Date.now() - time > nonceValidTimeout ||
-          cartId !== $authnet.config.state.getCartId()
+          cartId !== props.cartId
         ) {
           return clearSavedResponse(false);
         }
@@ -204,7 +208,7 @@ export default defineComponent({
           JSON.stringify({
             response: savedResponse.value,
             time: Date.now(),
-            cartId: $authnet.config.state.getCartId(),
+            cartId: props.cartId
           })
         );
 
@@ -224,23 +228,26 @@ export default defineComponent({
       emit('success', savedResponse.value);
     };
 
-    onMounted(async () => {
-      if (props.saveInStorage) {
-        loadResponseFromSession();
-      }
-
+    const saveScrollPosition = () => {
       const scrollPosition = { x: window.scrollX, y: window.scrollY };
-
       const resetScroll = (e) => {
         window.scroll(scrollPosition.x, scrollPosition.y);
         e.preventDefault();
         e.stopPropagation();
         window.removeEventListener('scroll', resetScroll);
       };
-
       window.addEventListener('scroll', resetScroll);
+    };
+
+    onMounted(async () => {
+      if (props.saveInStorage) {
+        loadResponseFromSession();
+      }
+
+      saveScrollPosition();
 
       window.CommunicationHandler = (response) => {
+        saveScrollPosition();
         errors.value = [];
         confirmed.value = false;
 
@@ -266,6 +273,8 @@ export default defineComponent({
     });
 
     onUnmounted(() => {
+      window.CommunicationHandler = null;
+
       if (timer.value) {
         clearTimeout(timer.value);
       }
